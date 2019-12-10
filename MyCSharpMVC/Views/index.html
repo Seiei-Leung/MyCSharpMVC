@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+</head>
+
+<body onselectstart="return false">
+    <div id="app"></div>
+    <div id="well"></div>
+</body>
+    <!-- react.min.js - React 的核心库 -->
+    <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+    <!-- react-dom.min.js -  提供与 DOM 相关的功能 -->
+    <script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+    <!-- babel.min.js - Babel 可以将 ES6 代码转为 ES5 代码 -->
+    <script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+<script type="text/babel">
+    class Welcome extends React.Component {
+        render() {
+            return <h1>Hello, {this.props.name}</h1>;
+        }
+    }
+
+    class Content extends React.Component {
+        render() {
+            return <p>{this.props.text}.</p>;
+        }
+    }
+
+
+    class App extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                date: new Date(),
+                isShow: true
+            };
+            this.checkThis3.bind(this);
+        }
+        componentDidMount() {
+            this.setTimeHook = setInterval(
+                () => {
+                    this.tick();
+                }, 1000
+            );
+        }
+        componentWillUnmount() {
+            clearInterval(this.setTimeHook);
+        }
+        tick() {
+            this.setState({
+                date: new Date()
+            });
+        }
+        checkThis1 = (e) => {
+            console.log(e);
+            console.log(this);
+        }
+        checkThis2(e) {
+            console.log(e);
+            console.log(this);
+        }
+        checkThis3(e) {
+            console.log(e);
+            console.log(this);
+        }
+        toggleShow = (e) => {
+            console.log(123)
+            this.setState((prevState) => ({
+                isShow: !prevState.isShow
+            }));
+        }
+        userList = [{name: "Seiei"}, {name: "Taka"}]
+        render() {
+            return (
+                <div>
+                    <Welcome name={this.props.name} />
+                    <Content text={this.props.text} />
+                    <div>{this.state.date.toLocaleTimeString()}</div>
+                    <div onClick={this.checkThis1}>声明事件方法时使用了箭头函数，绑定事件时没有显式绑定this</div>
+                    <div onClick={this.checkThis2}>正常普通形式地声明事件方法，绑定事件方法时没有显式绑定this</div>
+                    <div onClick={this.checkThis2.bind(this)}>正常普通形式地声明事件方法，绑定事件方法时显式绑定了this</div>
+                    <div onClick={(e) => {this.checkThis2(e)}}>正常普通形式地声明事件方法，绑定事件方法时使用箭头函数绑定，此时想要事件event对象，需要在箭头函数中显示传入e</div>
+                    <div onClick={this.checkThis3}>正常普通形式地声明事件方法，在类的构造函数中显式绑定了this</div>
+                    <div onClick={this.toggleShow}>{this.state.isShow ? "显示" : "隐藏"}</div>
+                    {this.state.isShow ? <Content text={this.props.text} /> : null}
+                    <UserComponent users={this.userList}/>
+                </div>
+            );
+        }
+    }
+
+    function UserComponent(props) {
+        return (
+            <ul>
+                {props.users.map((item) => 
+                    (<li>{item.name}</li>)
+                )}
+            </ul>
+        );
+    }
+
+
+    ReactDOM.render(
+        <App name="seiei" text="Hello, world"/>,
+        document.getElementById("app")
+    )
+
+    var Text = React.createClass({
+            getInitialState: function() {
+                return {name: "react"};
+            },
+            keyUp: function(e){
+                this.setState({name: e.target.value}, () => {console.log(this.state.name);});
+                
+            },
+            render: function() {
+                return (
+                    <div className="a">
+                        大家好，我是用{this.state.name}渲染出来的！
+                        <input onKeyUp={this.keyUp} />
+                    </div>
+                );
+            }
+        });
+ 
+    ReactDOM.render(
+        <Text></Text>,
+        document.getElementById('well')
+    );
+</script>
+</html>
